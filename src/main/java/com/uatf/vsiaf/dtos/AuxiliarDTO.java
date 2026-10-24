@@ -7,4 +7,5 @@ public class AuxiliarDTO {
     private String codigo;
     private String nombre;
     private Long objgastoId;
+    private Long codcontId;
 }

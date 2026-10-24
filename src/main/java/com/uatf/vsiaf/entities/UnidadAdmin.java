@@ -23,6 +23,10 @@ public class UnidadAdmin {
     @ManyToOne
     @JoinColumn(name = "entidad_id")
     private Entidad entidad;
+
+    @ManyToOne
+    @JoinColumn(name = "cla_depts_id")
+    private ClaDepts clasificadorDepto;
+
     public void setId(Long id) { this.id = id; }
 }
-

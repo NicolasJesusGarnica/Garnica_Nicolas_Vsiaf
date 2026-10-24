@@ -12,4 +12,9 @@ public class ActualDTO {
     private Double valorNeto;
     private String estadoBien;
     private Long responsableId;
+    private Long oficinaId;
+    private Long codcontId;
+    private Long auxiliarId;
+    private Long estadoId;
+    private Long organismoFinId;
 }

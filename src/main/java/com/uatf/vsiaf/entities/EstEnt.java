@@ -15,4 +15,8 @@ public class EstEnt {
     private String gestion;
 
     private Boolean activo;
+
+    @ManyToOne
+    @JoinColumn(name = "entidad_id")
+    private Entidad entidad;
 }

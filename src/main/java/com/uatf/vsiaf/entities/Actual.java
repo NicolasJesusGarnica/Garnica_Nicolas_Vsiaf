@@ -34,4 +34,24 @@ public class Actual {
     @ManyToOne
     @JoinColumn(name = "responsable_id")
     private Resp responsable;
+
+    @ManyToOne
+    @JoinColumn(name = "oficina_id")
+    private Oficina oficina;
+
+    @ManyToOne
+    @JoinColumn(name = "codcont_id")
+    private Codcont codcont;
+
+    @ManyToOne
+    @JoinColumn(name = "auxiliar_id")
+    private Auxiliar auxiliar;
+
+    @ManyToOne
+    @JoinColumn(name = "estado_id")
+    private Estado estado;
+
+    @ManyToOne
+    @JoinColumn(name = "organismo_fin_id")
+    private OrganismoFin organismoFin;
 }

@@ -6,4 +6,5 @@ public class ReportsDTO {
     private Long id;
     private String nombreReporte;
     private String rutaArchivo;
+    private Long usuarioId;
 }

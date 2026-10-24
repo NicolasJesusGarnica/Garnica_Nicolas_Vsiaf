@@ -8,4 +8,5 @@ public class BackupsDTO {
     private Date fechaBackup;
     private String nombreArchivo;
     private String usuarioCrea;
+    private Long usuarioId;
 }

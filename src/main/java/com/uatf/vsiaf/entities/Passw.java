@@ -18,4 +18,8 @@ public class Passw {
     private String password;
 
     private Boolean activo;
+
+    @ManyToOne
+    @JoinColumn(name = "responsable_id")
+    private Resp responsable;
 }

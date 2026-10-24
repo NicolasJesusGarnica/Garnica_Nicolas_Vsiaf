@@ -21,4 +21,8 @@ public class Backups {
 
     @Column(name = "usuario_crea", length = 50)
     private String usuarioCrea;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Passw usuario;
 }

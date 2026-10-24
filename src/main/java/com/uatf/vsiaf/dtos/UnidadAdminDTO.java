@@ -8,4 +8,5 @@ public class UnidadAdminDTO {
     private String nombre;
     private String ciudad;
     private Long entidadId;
+    private Long claDeptsId;
 }

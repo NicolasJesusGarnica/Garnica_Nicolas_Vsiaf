@@ -16,4 +16,8 @@ public class Config {
 
     @Column(length = 255)
     private String valor;
+
+    @ManyToOne
+    @JoinColumn(name = "entidad_id")
+    private Entidad entidad;
 }

@@ -20,4 +20,8 @@ public class Auxiliar {
     @ManyToOne
     @JoinColumn(name = "objgasto_id")
     private Objgasto objgasto;
+
+    @ManyToOne
+    @JoinColumn(name = "codcont_id")
+    private Codcont codcont;
 }

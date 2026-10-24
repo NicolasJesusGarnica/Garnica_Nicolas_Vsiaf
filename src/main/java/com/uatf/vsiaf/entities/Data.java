@@ -18,4 +18,8 @@ public class Data {
 
     @Column(length = 255)
     private String valorVariable;
+
+    @ManyToOne
+    @JoinColumn(name = "entidad_id")
+    private Entidad entidad;
 }

@@ -6,4 +6,5 @@ public class ConfigDTO {
     private Long id;
     private String clave;
     private String valor;
+    private Long entidadId;
 }

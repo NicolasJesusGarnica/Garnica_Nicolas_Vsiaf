@@ -7,4 +7,5 @@ public class PasswDTO {
     private String username;
     private String password;
     private Boolean activo;
+    private Long responsableId;
 }

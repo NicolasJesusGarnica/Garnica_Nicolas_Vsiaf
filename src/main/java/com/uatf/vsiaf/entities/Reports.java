@@ -16,4 +16,8 @@ public class Reports {
 
     @Column(length = 255)
     private String rutaArchivo;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Passw usuario;
 }

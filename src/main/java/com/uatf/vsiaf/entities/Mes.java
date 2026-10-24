@@ -18,4 +18,8 @@ public class Mes {
     private String nombreMes;
 
     private Boolean cerrado;
+
+    @ManyToOne
+    @JoinColumn(name = "est_ent_id")
+    private EstEnt estadoEntidad;
 }

@@ -7,4 +7,5 @@ public class MesDTO {
     private Integer numeroMes;
     private String nombreMes;
     private Boolean cerrado;
+    private Long estEntId;
 }

@@ -6,4 +6,5 @@ public class EstEntDTO {
     private Long id;
     private String gestion;
     private Boolean activo;
+    private Long entidadId;
 }

@@ -15,4 +15,12 @@ public class Bajas {
     private String observacion;
 
     private Double montoHistorial;
+
+    @ManyToOne
+    @JoinColumn(name = "baja_id")
+    private Baja baja;
+
+    @ManyToOne
+    @JoinColumn(name = "activo_id")
+    private Actual activo;
 }

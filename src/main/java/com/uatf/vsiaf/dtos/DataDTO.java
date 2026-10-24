@@ -6,4 +6,5 @@ public class DataDTO {
     private Long id;
     private String claveVariable;
     private String valorVariable;
+    private Long entidadId;
 }
