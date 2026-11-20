@@ -16,8 +16,7 @@ import java.util.Date;
 public class Passw {
 
     @Id
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "Identificador único autoincremental del usuario")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Identificador único (opcional para autoincremental, o manual para validar duplicados)", example = "1")
     private Long id;
 
     @NotBlank(message = "El nombre de usuario es obligatorio")

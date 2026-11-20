@@ -13,8 +13,7 @@ import lombok.Data;
 public class ClaDepts {
 
     @Id
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "Identificador autoincremental del departamento")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Identificador único (opcional para autoincremental, o manual para validar duplicados)", example = "1")
     private Long id;
 
     @Column(unique = true, length = 10)
