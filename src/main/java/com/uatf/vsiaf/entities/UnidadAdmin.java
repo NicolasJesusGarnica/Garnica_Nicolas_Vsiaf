@@ -9,6 +9,8 @@ import lombok.Data;
 @Table(name = "unidad_admin")
 public class UnidadAdmin {
     @Id
+    @io.swagger.v3.oas.annotations.media.Schema(accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY, description = "Identificador autoincremental de la unidad administrativa")
+    @com.fasterxml.jackson.annotation.JsonProperty(access = com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @Column(name = "codigo_unidad", unique = true, length = 20)

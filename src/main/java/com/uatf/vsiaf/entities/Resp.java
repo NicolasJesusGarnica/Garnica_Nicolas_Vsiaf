@@ -9,6 +9,8 @@ import lombok.Data;
 @Table(name = "responsables")
 public class Resp {
     @Id
+    @io.swagger.v3.oas.annotations.media.Schema(accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY, description = "Identificador autoincremental del responsable")
+    @com.fasterxml.jackson.annotation.JsonProperty(access = com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @Column(name = "carnet_identidad", unique = true, length = 15)

@@ -10,6 +10,8 @@ import java.util.Date;
 @Table(name = "bajas")
 public class Baja {
     @Id
+    @io.swagger.v3.oas.annotations.media.Schema(accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY, description = "Identificador autoincremental de la causal de baja")
+    @com.fasterxml.jackson.annotation.JsonProperty(access = com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @Temporal(TemporalType.DATE)

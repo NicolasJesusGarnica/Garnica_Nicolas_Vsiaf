@@ -54,7 +54,8 @@ public class MesService extends BaseCrudService<Mes, Long> {
 
     /**
      * Apertura el siguiente mes contable de forma autoincremental (1..12).
-     * No requiere que el usuario defina qué mes es: el sistema asigna el siguiente correlativo y nombre.
+     * El ID y número de mes se autogeneran del 1 al 12.
+     * Si el usuario envía nombreMes, se respeta; si no, se asigna el oficial.
      */
     @Transactional
     public Mes aperturarSiguienteMes(Mes input) {
@@ -70,22 +71,23 @@ public class MesService extends BaseCrudService<Mes, Long> {
             throw new BusinessRuleException("La gestión fiscal ya cuenta con los 12 períodos mensuales aperturados (Enero a Diciembre). No se pueden aperturar más meses en la gestión.");
         }
 
-        Mes nuevo = (input != null) ? input : new Mes();
+        Mes nuevo = new Mes();
+        nuevo.setId((long) siguienteNumero);
         nuevo.setNumeroMes(siguienteNumero);
-        nuevo.setNombreMes(NOMBRES_MESES[siguienteNumero - 1]);
-        if (nuevo.getCerrado() == null) {
-            nuevo.setCerrado(false);
-        }
 
-        if (nuevo.getId() == null) {
-            nuevo.setId(getNextSequenceValue());
+        if (input != null && input.getNombreMes() != null && !input.getNombreMes().trim().isEmpty()) {
+            nuevo.setNombreMes(input.getNombreMes().trim());
         } else {
-            if (repository.existsById(nuevo.getId())) {
-                throw new DuplicateResourceException("El mes con ID " + nuevo.getId() + " ya ha sido registrado.");
-            }
-            syncSequence();
+            nuevo.setNombreMes(NOMBRES_MESES[siguienteNumero - 1]);
         }
 
+        nuevo.setCerrado(false);
+
+        if (repository.existsById(nuevo.getId())) {
+            throw new DuplicateResourceException("El mes con ID " + nuevo.getId() + " ya ha sido registrado.");
+        }
+
+        syncSequence();
         entityManager.persist(nuevo);
         entityManager.flush();
         return nuevo;

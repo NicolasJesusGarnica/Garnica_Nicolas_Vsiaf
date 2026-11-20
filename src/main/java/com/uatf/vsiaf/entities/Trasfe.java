@@ -10,6 +10,8 @@ import java.util.Date;
 @Table(name = "transferencias")
 public class Trasfe {
     @Id
+    @io.swagger.v3.oas.annotations.media.Schema(accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY, description = "Identificador autoincremental del acta de transferencia")
+    @com.fasterxml.jackson.annotation.JsonProperty(access = com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @Temporal(TemporalType.DATE)

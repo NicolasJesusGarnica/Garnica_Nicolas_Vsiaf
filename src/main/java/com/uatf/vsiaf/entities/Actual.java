@@ -10,6 +10,8 @@ import java.util.Date;
 @Table(name = "activos_actuales")
 public class Actual {
     @Id
+    @io.swagger.v3.oas.annotations.media.Schema(accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY, description = "Identificador único autoincremental del activo")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @Column(name = "codigo_activo", unique = true, length = 50)
