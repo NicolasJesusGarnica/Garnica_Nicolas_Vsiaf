@@ -1,17 +1,23 @@
 package com.uatf.vsiaf.controllers;
+
 import com.uatf.vsiaf.entities.Baja;
 import com.uatf.vsiaf.services.BajaService;
+import com.uatf.vsiaf.services.BaseCrudService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/baja")
-public class BajaController {
-    @Autowired private BajaService service;
-    @GetMapping public List<Baja> listar() { return service.findAll(); }
-    @PostMapping public Baja guardar(@RequestBody Baja entity) { return service.save(entity); }
-    @GetMapping("/{id}") public Baja obtenerPorId(@PathVariable Long id) { return service.findById(id); }
-    @PutMapping("/{id}") public Baja actualizar(@PathVariable Long id, @RequestBody Baja entity) { entity.setId(id); return service.save(entity); }
-    @DeleteMapping("/{id}") public void eliminar(@PathVariable Long id) { service.deleteById(id); }
+@Tag(name = "Baja", description = "Cabecera de bajas de activos (VSIAF)")
+public class BajaController extends BaseCrudController<Baja, Long> {
+
+    @Autowired
+    private BajaService service;
+
+    @Override
+    protected BaseCrudService<Baja, Long> getService() {
+        return service;
+    }
 }

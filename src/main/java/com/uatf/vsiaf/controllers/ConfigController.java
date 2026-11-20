@@ -1,17 +1,23 @@
 package com.uatf.vsiaf.controllers;
+
 import com.uatf.vsiaf.entities.Config;
 import com.uatf.vsiaf.services.ConfigService;
+import com.uatf.vsiaf.services.BaseCrudService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/config")
-public class ConfigController {
-    @Autowired private ConfigService service;
-    @GetMapping public List<Config> listar() { return service.findAll(); }
-    @PostMapping public Config guardar(@RequestBody Config entity) { return service.save(entity); }
-    @GetMapping("/{id}") public Config obtenerPorId(@PathVariable Long id) { return service.findById(id); }
-    @PutMapping("/{id}") public Config actualizar(@PathVariable Long id, @RequestBody Config entity) { entity.setId(id); return service.save(entity); }
-    @DeleteMapping("/{id}") public void eliminar(@PathVariable Long id) { service.deleteById(id); }
+@Tag(name = "Config", description = "Configuraciones del sistema (VSIAF)")
+public class ConfigController extends BaseCrudController<Config, Long> {
+
+    @Autowired
+    private ConfigService service;
+
+    @Override
+    protected BaseCrudService<Config, Long> getService() {
+        return service;
+    }
 }

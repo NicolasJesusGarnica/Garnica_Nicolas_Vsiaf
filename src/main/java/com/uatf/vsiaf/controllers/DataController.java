@@ -1,17 +1,23 @@
 package com.uatf.vsiaf.controllers;
+
 import com.uatf.vsiaf.entities.Data;
 import com.uatf.vsiaf.services.DataService;
+import com.uatf.vsiaf.services.BaseCrudService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/data")
-public class DataController {
-    @Autowired private DataService service;
-    @GetMapping public List<Data> listar() { return service.findAll(); }
-    @PostMapping public Data guardar(@RequestBody Data entity) { return service.save(entity); }
-    @GetMapping("/{id}") public Data obtenerPorId(@PathVariable Long id) { return service.findById(id); }
-    @PutMapping("/{id}") public Data actualizar(@PathVariable Long id, @RequestBody Data entity) { entity.setId(id); return service.save(entity); }
-    @DeleteMapping("/{id}") public void eliminar(@PathVariable Long id) { service.deleteById(id); }
+@Tag(name = "Data", description = "Variables y data del sistema (VSIAF)")
+public class DataController extends BaseCrudController<Data, Long> {
+
+    @Autowired
+    private DataService service;
+
+    @Override
+    protected BaseCrudService<Data, Long> getService() {
+        return service;
+    }
 }

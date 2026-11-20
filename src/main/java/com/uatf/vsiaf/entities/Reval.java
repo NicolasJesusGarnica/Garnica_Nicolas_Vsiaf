@@ -1,5 +1,6 @@
 package com.uatf.vsiaf.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.Date;
@@ -9,7 +10,6 @@ import java.util.Date;
 @Table(name = "revaluos")
 public class Reval {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Temporal(TemporalType.DATE)
@@ -21,4 +21,13 @@ public class Reval {
     @ManyToOne
     @JoinColumn(name = "activo_id")
     private Actual activo;
+
+    @JsonProperty("activoId")
+    public void setActivoId(Long id) {
+        if (id != null) {
+            Actual a = new Actual();
+            a.setId(id);
+            this.activo = a;
+        }
+    }
 }

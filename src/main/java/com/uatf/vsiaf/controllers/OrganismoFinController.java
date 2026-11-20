@@ -1,17 +1,23 @@
 package com.uatf.vsiaf.controllers;
+
 import com.uatf.vsiaf.entities.OrganismoFin;
 import com.uatf.vsiaf.services.OrganismoFinService;
+import com.uatf.vsiaf.services.BaseCrudService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/organismo-fin")
-public class OrganismoFinController {
-    @Autowired private OrganismoFinService service;
-    @GetMapping public List<OrganismoFin> listar() { return service.findAll(); }
-    @PostMapping public OrganismoFin guardar(@RequestBody OrganismoFin entity) { return service.save(entity); }
-    @GetMapping("/{id}") public OrganismoFin obtenerPorId(@PathVariable Long id) { return service.findById(id); }
-    @PutMapping("/{id}") public OrganismoFin actualizar(@PathVariable Long id, @RequestBody OrganismoFin entity) { entity.setId(id); return service.save(entity); }
-    @DeleteMapping("/{id}") public void eliminar(@PathVariable Long id) { service.deleteById(id); }
+@RequestMapping({"/api/organismo-fin", "/api/organismos-fin"})
+@Tag(name = "OrganismoFin", description = "Organismos financiadores (VSIAF)")
+public class OrganismoFinController extends BaseCrudController<OrganismoFin, Long> {
+
+    @Autowired
+    private OrganismoFinService service;
+
+    @Override
+    protected BaseCrudService<OrganismoFin, Long> getService() {
+        return service;
+    }
 }

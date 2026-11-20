@@ -1,5 +1,6 @@
 package com.uatf.vsiaf.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -8,7 +9,6 @@ import lombok.Data;
 @Table(name = "unidad_admin")
 public class UnidadAdmin {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "codigo_unidad", unique = true, length = 20)
@@ -28,5 +28,21 @@ public class UnidadAdmin {
     @JoinColumn(name = "cla_depts_id")
     private ClaDepts clasificadorDepto;
 
-    public void setId(Long id) { this.id = id; }
+    @JsonProperty("entidadId")
+    public void setEntidadId(Long id) {
+        if (id != null) {
+            Entidad e = new Entidad();
+            e.setId(id);
+            this.entidad = e;
+        }
+    }
+
+    @JsonProperty("claDeptsId")
+    public void setClaDeptsId(Long id) {
+        if (id != null) {
+            ClaDepts c = new ClaDepts();
+            c.setId(id);
+            this.clasificadorDepto = c;
+        }
+    }
 }

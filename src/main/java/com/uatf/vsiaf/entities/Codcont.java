@@ -8,7 +8,6 @@ import lombok.Data;
 @Table(name = "codigos_contables")
 public class Codcont {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "cuenta_contable", unique = true, length = 20)

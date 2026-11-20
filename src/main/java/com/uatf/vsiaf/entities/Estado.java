@@ -8,7 +8,6 @@ import lombok.Data;
 @Table(name = "estados_bien")
 public class Estado {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, length = 5)

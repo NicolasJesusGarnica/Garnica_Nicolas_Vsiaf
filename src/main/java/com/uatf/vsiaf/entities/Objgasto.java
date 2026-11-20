@@ -8,7 +8,6 @@ import lombok.Data;
 @Table(name = "objeto_gasto")
 public class Objgasto {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, length = 10)

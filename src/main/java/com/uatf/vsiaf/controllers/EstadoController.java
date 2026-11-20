@@ -1,17 +1,23 @@
 package com.uatf.vsiaf.controllers;
+
 import com.uatf.vsiaf.entities.Estado;
 import com.uatf.vsiaf.services.EstadoService;
+import com.uatf.vsiaf.services.BaseCrudService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/estados")
-public class EstadoController {
-    @Autowired private EstadoService service;
-    @GetMapping public List<Estado> listar() { return service.findAll(); }
-    @PostMapping public Estado guardar(@RequestBody Estado entity) { return service.save(entity); }
-    @GetMapping("/{id}") public Estado obtenerPorId(@PathVariable Long id) { return service.findById(id); }
-    @PutMapping("/{id}") public Estado actualizar(@PathVariable Long id, @RequestBody Estado entity) { entity.setId(id); return service.save(entity); }
-    @DeleteMapping("/{id}") public void eliminar(@PathVariable Long id) { service.deleteById(id); }
+@Tag(name = "Estado", description = "Estados de conservación del bien (VSIAF)")
+public class EstadoController extends BaseCrudController<Estado, Long> {
+
+    @Autowired
+    private EstadoService service;
+
+    @Override
+    protected BaseCrudService<Estado, Long> getService() {
+        return service;
+    }
 }

@@ -1,17 +1,23 @@
 package com.uatf.vsiaf.controllers;
+
 import com.uatf.vsiaf.entities.ClaDepts;
 import com.uatf.vsiaf.services.ClaDeptsService;
+import com.uatf.vsiaf.services.BaseCrudService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/cla-depts")
-public class ClaDeptsController {
-    @Autowired private ClaDeptsService service;
-    @GetMapping public List<ClaDepts> listar() { return service.findAll(); }
-    @PostMapping public ClaDepts guardar(@RequestBody ClaDepts entity) { return service.save(entity); }
-    @GetMapping("/{id}") public ClaDepts obtenerPorId(@PathVariable Long id) { return service.findById(id); }
-    @PutMapping("/{id}") public ClaDepts actualizar(@PathVariable Long id, @RequestBody ClaDepts entity) { entity.setId(id); return service.save(entity); }
-    @DeleteMapping("/{id}") public void eliminar(@PathVariable Long id) { service.deleteById(id); }
+@Tag(name = "ClaDepts", description = "Clasificador de departamentos (VSIAF)")
+public class ClaDeptsController extends BaseCrudController<ClaDepts, Long> {
+
+    @Autowired
+    private ClaDeptsService service;
+
+    @Override
+    protected BaseCrudService<ClaDepts, Long> getService() {
+        return service;
+    }
 }

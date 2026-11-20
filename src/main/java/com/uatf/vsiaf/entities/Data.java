@@ -1,5 +1,6 @@
 package com.uatf.vsiaf.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,6 @@ import lombok.Setter;
 @Table(name = "data_sistema")
 public class Data {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 50)
@@ -22,4 +22,13 @@ public class Data {
     @ManyToOne
     @JoinColumn(name = "entidad_id")
     private Entidad entidad;
+
+    @JsonProperty("entidadId")
+    public void setEntidadId(Long id) {
+        if (id != null) {
+            Entidad e = new Entidad();
+            e.setId(id);
+            this.entidad = e;
+        }
+    }
 }

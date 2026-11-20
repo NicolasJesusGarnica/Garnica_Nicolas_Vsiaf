@@ -1,17 +1,23 @@
 package com.uatf.vsiaf.controllers;
+
 import com.uatf.vsiaf.entities.Objgasto;
 import com.uatf.vsiaf.services.ObjgastoService;
+import com.uatf.vsiaf.services.BaseCrudService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/objgasto")
-public class ObjgastoController {
-    @Autowired private ObjgastoService service;
-    @GetMapping public List<Objgasto> listar() { return service.findAll(); }
-    @PostMapping public Objgasto guardar(@RequestBody Objgasto entity) { return service.save(entity); }
-    @GetMapping("/{id}") public Objgasto obtenerPorId(@PathVariable Long id) { return service.findById(id); }
-    @PutMapping("/{id}") public Objgasto actualizar(@PathVariable Long id, @RequestBody Objgasto entity) { entity.setId(id); return service.save(entity); }
-    @DeleteMapping("/{id}") public void eliminar(@PathVariable Long id) { service.deleteById(id); }
+@Tag(name = "Objgasto", description = "Objetos de gasto (VSIAF)")
+public class ObjgastoController extends BaseCrudController<Objgasto, Long> {
+
+    @Autowired
+    private ObjgastoService service;
+
+    @Override
+    protected BaseCrudService<Objgasto, Long> getService() {
+        return service;
+    }
 }

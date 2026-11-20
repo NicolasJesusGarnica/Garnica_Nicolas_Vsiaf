@@ -1,5 +1,6 @@
 package com.uatf.vsiaf.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.Date;
@@ -9,7 +10,6 @@ import java.util.Date;
 @Table(name = "transferencias")
 public class Trasfe {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Temporal(TemporalType.DATE)
@@ -28,4 +28,31 @@ public class Trasfe {
     @ManyToOne
     @JoinColumn(name = "resp_destino_id")
     private Resp respDestino;
+
+    @JsonProperty("activoId")
+    public void setActivoId(Long id) {
+        if (id != null) {
+            Actual a = new Actual();
+            a.setId(id);
+            this.activo = a;
+        }
+    }
+
+    @JsonProperty("respOrigenId")
+    public void setRespOrigenId(Long id) {
+        if (id != null) {
+            Resp r = new Resp();
+            r.setId(id);
+            this.respOrigen = r;
+        }
+    }
+
+    @JsonProperty("respDestinoId")
+    public void setRespDestinoId(Long id) {
+        if (id != null) {
+            Resp r = new Resp();
+            r.setId(id);
+            this.respDestino = r;
+        }
+    }
 }

@@ -1,17 +1,23 @@
 package com.uatf.vsiaf.controllers;
+
 import com.uatf.vsiaf.entities.Trasfe;
 import com.uatf.vsiaf.services.TrasfeService;
+import com.uatf.vsiaf.services.BaseCrudService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/trasfe")
-public class TrasfeController {
-    @Autowired private TrasfeService service;
-    @GetMapping public List<Trasfe> listar() { return service.findAll(); }
-    @PostMapping public Trasfe guardar(@RequestBody Trasfe entity) { return service.save(entity); }
-    @GetMapping("/{id}") public Trasfe obtenerPorId(@PathVariable Long id) { return service.findById(id); }
-    @PutMapping("/{id}") public Trasfe actualizar(@PathVariable Long id, @RequestBody Trasfe entity) { entity.setId(id); return service.save(entity); }
-    @DeleteMapping("/{id}") public void eliminar(@PathVariable Long id) { service.deleteById(id); }
+@Tag(name = "Trasfe", description = "Transferencias de activos (VSIAF)")
+public class TrasfeController extends BaseCrudController<Trasfe, Long> {
+
+    @Autowired
+    private TrasfeService service;
+
+    @Override
+    protected BaseCrudService<Trasfe, Long> getService() {
+        return service;
+    }
 }

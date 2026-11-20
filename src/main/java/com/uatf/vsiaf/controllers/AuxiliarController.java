@@ -1,17 +1,23 @@
 package com.uatf.vsiaf.controllers;
+
 import com.uatf.vsiaf.entities.Auxiliar;
 import com.uatf.vsiaf.services.AuxiliarService;
+import com.uatf.vsiaf.services.BaseCrudService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auxiliares")
-public class AuxiliarController {
-    @Autowired private AuxiliarService service;
-    @GetMapping public List<Auxiliar> listar() { return service.findAll(); }
-    @PostMapping public Auxiliar guardar(@RequestBody Auxiliar entity) { return service.save(entity); }
-    @GetMapping("/{id}") public Auxiliar obtenerPorId(@PathVariable Long id) { return service.findById(id); }
-    @PutMapping("/{id}") public Auxiliar actualizar(@PathVariable Long id, @RequestBody Auxiliar entity) { entity.setId(id); return service.save(entity); }
-    @DeleteMapping("/{id}") public void eliminar(@PathVariable Long id) { service.deleteById(id); }
+@Tag(name = "Auxiliar", description = "Auxiliares contables (VSIAF)")
+public class AuxiliarController extends BaseCrudController<Auxiliar, Long> {
+
+    @Autowired
+    private AuxiliarService service;
+
+    @Override
+    protected BaseCrudService<Auxiliar, Long> getService() {
+        return service;
+    }
 }
