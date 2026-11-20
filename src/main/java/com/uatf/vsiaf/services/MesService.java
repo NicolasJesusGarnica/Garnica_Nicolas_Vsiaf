@@ -51,6 +51,14 @@ public class MesService extends BaseCrudService<Mes, Long> {
             throw new DuplicateResourceException("El mes con ID " + entity.getId() + " ya ha sido registrado. Por favor, registre con otro ID o no envíe el ID para asignación automática.");
         }
 
+        if (entity.getNumeroMes() != null && repository.existsByNumeroMes(entity.getNumeroMes())) {
+            throw new DuplicateResourceException("El mes número " + entity.getNumeroMes() + " ya ha sido registrado en el sistema. No se puede duplicar un mes en la gestión.");
+        }
+
+        if (entity.getNombreMes() != null && !entity.getNombreMes().trim().isEmpty() && repository.existsByNombreMesIgnoreCase(entity.getNombreMes().trim())) {
+            throw new DuplicateResourceException("El mes '" + entity.getNombreMes() + "' ya ha sido registrado.");
+        }
+
         if (entity.getId() == null) {
             Long nextId = getNextSequenceValue();
             entity.setId(nextId);
