@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/bajas-detalle")
 @Tag(name = "Bajas", description = "Detalle de bajas de activos (VSIAF)")
-public class BajasController extends BaseCrudController<Bajas, Long> {
+public class BajasController extends AuditTransactionController<Bajas, Long> {
 
     @Autowired
     private BajasService service;

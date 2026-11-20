@@ -1,6 +1,7 @@
 package com.uatf.vsiaf.services;
 
 import com.uatf.vsiaf.entities.Mes;
+import com.uatf.vsiaf.exceptions.BusinessRuleException;
 import com.uatf.vsiaf.exceptions.DuplicateResourceException;
 import com.uatf.vsiaf.repositories.MesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +9,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class MesService extends BaseCrudService<Mes, Long> {
+
+    private static final String[] NOMBRES_MESES = {
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    };
 
     @Autowired
     private MesRepository repository;
@@ -44,30 +52,54 @@ public class MesService extends BaseCrudService<Mes, Long> {
         entity.setId(id);
     }
 
-    @Override
+    /**
+     * Apertura el siguiente mes contable de forma autoincremental (1..12).
+     * No requiere que el usuario defina qué mes es: el sistema asigna el siguiente correlativo y nombre.
+     */
     @Transactional
-    public Mes create(Mes entity) {
-        if (entity.getId() != null && repository.existsById(entity.getId())) {
-            throw new DuplicateResourceException("El mes con ID " + entity.getId() + " ya ha sido registrado. Por favor, registre con otro ID o no envíe el ID para asignación automática.");
+    public Mes aperturarSiguienteMes(Mes input) {
+        List<Mes> existentes = repository.findAll();
+        int maxNumero = 0;
+        for (Mes m : existentes) {
+            if (m.getNumeroMes() != null && m.getNumeroMes() > maxNumero) {
+                maxNumero = m.getNumeroMes();
+            }
+        }
+        int siguienteNumero = maxNumero + 1;
+        if (siguienteNumero > 12) {
+            throw new BusinessRuleException("La gestión fiscal ya cuenta con los 12 períodos mensuales aperturados (Enero a Diciembre). No se pueden aperturar más meses en la gestión.");
         }
 
-        if (entity.getNumeroMes() != null && repository.existsByNumeroMes(entity.getNumeroMes())) {
-            throw new DuplicateResourceException("El mes número " + entity.getNumeroMes() + " ya ha sido registrado en el sistema. No se puede duplicar un mes en la gestión.");
+        Mes nuevo = (input != null) ? input : new Mes();
+        nuevo.setNumeroMes(siguienteNumero);
+        nuevo.setNombreMes(NOMBRES_MESES[siguienteNumero - 1]);
+        if (nuevo.getCerrado() == null) {
+            nuevo.setCerrado(false);
         }
 
-        if (entity.getNombreMes() != null && !entity.getNombreMes().trim().isEmpty() && repository.existsByNombreMesIgnoreCase(entity.getNombreMes().trim())) {
-            throw new DuplicateResourceException("El mes '" + entity.getNombreMes() + "' ya ha sido registrado.");
-        }
-
-        if (entity.getId() == null) {
-            Long nextId = getNextSequenceValue();
-            entity.setId(nextId);
+        if (nuevo.getId() == null) {
+            nuevo.setId(getNextSequenceValue());
         } else {
+            if (repository.existsById(nuevo.getId())) {
+                throw new DuplicateResourceException("El mes con ID " + nuevo.getId() + " ya ha sido registrado.");
+            }
             syncSequence();
         }
 
-        entityManager.persist(entity);
+        entityManager.persist(nuevo);
         entityManager.flush();
-        return entity;
+        return nuevo;
+    }
+
+    @Override
+    @Transactional
+    public Mes create(Mes entity) {
+        return aperturarSiguienteMes(entity);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        throw new BusinessRuleException("Regla de negocio VSIAF: Los períodos del calendario contable fiscal son fijos y no pueden ser eliminados.");
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/cla-depts")
 @Tag(name = "ClaDepts", description = "Clasificador de departamentos (VSIAF)")
-public class ClaDeptsController extends BaseCrudController<ClaDepts, Long> {
+public class ClaDeptsController extends ReadOnlyController<ClaDepts, Long> {
 
     @Autowired
     private ClaDeptsService service;

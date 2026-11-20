@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/cta-par")
 @Tag(name = "CtaPar", description = "Cuentas y partidas presupuestarias (VSIAF)")
-public class CtaParController extends BaseCrudController<CtaPar, Long> {
+public class CtaParController extends CatalogController<CtaPar, Long> {
 
     @Autowired
     private CtaParService service;

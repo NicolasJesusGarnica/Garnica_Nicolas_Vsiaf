@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/est-ent")
 @Tag(name = "EstEnt", description = "Estado de entidad por gestión (VSIAF)")
-public class EstEntController extends BaseCrudController<EstEnt, Long> {
+public class EstEntController extends ReadOnlyController<EstEnt, Long> {
 
     @Autowired
     private EstEntService service;

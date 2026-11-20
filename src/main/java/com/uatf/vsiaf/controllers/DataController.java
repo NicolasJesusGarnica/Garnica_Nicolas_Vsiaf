@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/data")
 @Tag(name = "Data", description = "Variables y data del sistema (VSIAF)")
-public class DataController extends BaseCrudController<Data, Long> {
+public class DataController extends ReadOnlyController<Data, Long> {
 
     @Autowired
     private DataService service;

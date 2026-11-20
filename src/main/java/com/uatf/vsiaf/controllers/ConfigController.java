@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/config")
 @Tag(name = "Config", description = "Configuraciones del sistema (VSIAF)")
-public class ConfigController extends BaseCrudController<Config, Long> {
+public class ConfigController extends ConfigurableEntityController<Config, Long> {
 
     @Autowired
     private ConfigService service;

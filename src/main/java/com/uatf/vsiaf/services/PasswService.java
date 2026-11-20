@@ -1,12 +1,15 @@
 package com.uatf.vsiaf.services;
 
 import com.uatf.vsiaf.entities.Passw;
+import com.uatf.vsiaf.exceptions.BusinessRuleException;
 import com.uatf.vsiaf.exceptions.DuplicateResourceException;
 import com.uatf.vsiaf.repositories.PasswRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 @Service
 public class PasswService extends BaseCrudService<Passw, Long> {
@@ -21,7 +24,7 @@ public class PasswService extends BaseCrudService<Passw, Long> {
 
     @Override
     protected String getEntityName() {
-        return "el usuario/credencial";
+        return "el usuario";
     }
 
     @Override
@@ -48,7 +51,21 @@ public class PasswService extends BaseCrudService<Passw, Long> {
     @Transactional
     public Passw create(Passw entity) {
         if (entity.getId() != null && repository.existsById(entity.getId())) {
-            throw new DuplicateResourceException("El usuario/credencial con ID " + entity.getId() + " ya ha sido registrado. Por favor, registre con otro ID o no envíe el ID para asignación automática.");
+            throw new DuplicateResourceException("El usuario con ID " + entity.getId() + " ya ha sido registrado.");
+        }
+
+        if (entity.getUsername() != null && repository.existsByUsername(entity.getUsername().trim())) {
+            throw new DuplicateResourceException("El nombre de usuario '" + entity.getUsername().trim() + "' ya se encuentra en uso. Por favor, elija otro.");
+        }
+
+        if (entity.getActivo() == null) {
+            entity.setActivo(true);
+        }
+        if (entity.getGrupo() == null || entity.getGrupo().trim().isEmpty()) {
+            entity.setGrupo("User");
+        }
+        if (entity.getFechaUltimoAcceso() == null) {
+            entity.setFechaUltimoAcceso(new Date());
         }
 
         if (entity.getId() == null) {
@@ -61,5 +78,11 @@ public class PasswService extends BaseCrudService<Passw, Long> {
         entityManager.persist(entity);
         entityManager.flush();
         return entity;
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        throw new BusinessRuleException("Regla de negocio VSIAF: Por normas de auditoría y control gubernamental, los usuarios del sistema no pueden ser eliminados físicamente. Para inhabilitar un acceso, utilice PATCH con 'activo': false.");
     }
 }

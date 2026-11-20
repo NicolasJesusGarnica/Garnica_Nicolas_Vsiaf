@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/objgasto")
 @Tag(name = "Objgasto", description = "Objetos de gasto (VSIAF)")
-public class ObjgastoController extends BaseCrudController<Objgasto, Long> {
+public class ObjgastoController extends CatalogController<Objgasto, Long> {
 
     @Autowired
     private ObjgastoService service;

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/orguser")
 @Tag(name = "Orguser", description = "Usuarios por entidad (VSIAF)")
-public class OrguserController extends BaseCrudController<Orguser, Long> {
+public class OrguserController extends ConfigurableEntityController<Orguser, Long> {
 
     @Autowired
     private OrguserService service;

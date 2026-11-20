@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/estados")
 @Tag(name = "Estado", description = "Estados de conservación del bien (VSIAF)")
-public class EstadoController extends BaseCrudController<Estado, Long> {
+public class EstadoController extends ReadOnlyController<Estado, Long> {
 
     @Autowired
     private EstadoService service;

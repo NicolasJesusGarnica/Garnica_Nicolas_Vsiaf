@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/trasfe")
 @Tag(name = "Trasfe", description = "Transferencias de activos (VSIAF)")
-public class TrasfeController extends BaseCrudController<Trasfe, Long> {
+public class TrasfeController extends AuditTransactionController<Trasfe, Long> {
 
     @Autowired
     private TrasfeService service;

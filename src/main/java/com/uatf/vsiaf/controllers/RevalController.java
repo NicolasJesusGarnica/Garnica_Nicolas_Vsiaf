@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/reval")
 @Tag(name = "Reval", description = "Revalúos técnicos de activos (VSIAF)")
-public class RevalController extends BaseCrudController<Reval, Long> {
+public class RevalController extends AuditTransactionController<Reval, Long> {
 
     @Autowired
     private RevalService service;

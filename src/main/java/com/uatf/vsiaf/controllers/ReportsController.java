@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/reports")
 @Tag(name = "Reports", description = "Historial de reportes emitidos (VSIAF)")
-public class ReportsController extends BaseCrudController<Reports, Long> {
+public class ReportsController extends ReadOnlyController<Reports, Long> {
 
     @Autowired
     private ReportsService service;
