@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping({"/api/organismo-fin", "/api/organismos-fin"})
+@RequestMapping("/api/organismo-fin")
 @Tag(name = "OrganismoFin", description = "Organismos financiadores (VSIAF)")
 public class OrganismoFinController extends BaseCrudController<OrganismoFin, Long> {
 

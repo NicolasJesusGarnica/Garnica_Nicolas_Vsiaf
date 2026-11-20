@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping({"/api/unidadadmin", "/api/unidad-admin"})
+@RequestMapping("/api/unidadadmin")
 @Tag(name = "UnidadAdmin", description = "Unidades administrativas (VSIAF)")
 public class UnidadAdminController extends BaseCrudController<UnidadAdmin, Long> {
 

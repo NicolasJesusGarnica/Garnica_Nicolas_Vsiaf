@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping({"/api/resp", "/api/responsables"})
+@RequestMapping("/api/resp")
 @Tag(name = "Resp", description = "Responsables y custodios de activos (VSIAF)")
 public class RespController extends BaseCrudController<Resp, Long> {
 

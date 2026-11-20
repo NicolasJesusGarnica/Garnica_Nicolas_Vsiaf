@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping({"/api/mes", "/api/meses"})
+@RequestMapping("/api/mes")
 @Tag(name = "Mes", description = "Meses y cierres de gestión (VSIAF)")
 public class MesController extends BaseCrudController<Mes, Long> {
 
