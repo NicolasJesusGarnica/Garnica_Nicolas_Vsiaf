@@ -27,4 +27,16 @@ public class Codcont {
     @Column(name = "coeficiente_depreciacion")
     @Schema(description = "Coeficiente anual de depreciación % (calculado automáticamente como 100/vida útil)", example = "2.5", accessMode = Schema.AccessMode.READ_ONLY)
     private Double coeficienteDepreciacion;
+
+    @Column(name = "deprecia")
+    @Schema(description = "Indica si el rubro se deprecia contablemente (casilla 'Deprecia' en VSIAF)", example = "true")
+    private Boolean deprecia = true;
+
+    @Column(name = "actualiza")
+    @Schema(description = "Indica si el rubro se actualiza por UFV (casilla 'Actualiza' en VSIAF)", example = "true")
+    private Boolean actualiza = true;
+
+    @Column(name = "observaciones", length = 500)
+    @Schema(description = "Notas u observaciones del grupo contable", example = "Sin observaciones")
+    private String observaciones;
 }

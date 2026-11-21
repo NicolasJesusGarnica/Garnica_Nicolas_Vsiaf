@@ -61,7 +61,7 @@ public class CodcontService extends BaseCrudService<Codcont, Long> {
         if (desc.contains("TERRENO") || desc.contains("MUSEO") || desc.contains("CULTURAL")) return 0;
         if (desc.contains("INTANGIB") || desc.contains("CONSTRUC")) return 5;
 
-        return 10; // Valor por defecto si es otro activo general
+        return 10;
     }
 
     private void autocompletarYCalcular(Codcont entity) {
@@ -81,6 +81,14 @@ public class CodcontService extends BaseCrudService<Codcont, Long> {
             entity.setCoeficienteDepreciacion(coef);
         } else if (entity.getVidaUtilAnios() != null && entity.getVidaUtilAnios() == 0) {
             entity.setCoeficienteDepreciacion(0.0);
+        }
+
+        // 4. Casillas de Deprecia y Actualiza como en VSIAF
+        if (entity.getDeprecia() == null) {
+            entity.setDeprecia(entity.getVidaUtilAnios() != null && entity.getVidaUtilAnios() > 0);
+        }
+        if (entity.getActualiza() == null) {
+            entity.setActualiza(true);
         }
     }
 
