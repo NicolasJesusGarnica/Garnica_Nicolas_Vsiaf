@@ -28,7 +28,11 @@ public abstract class BaseCrudService<T, ID> {
     protected abstract void setEntityId(T entity, ID id);
 
     public List<T> findAll() {
-        return getRepository().findAll();
+        try {
+            return getRepository().findAll(org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.ASC, "id"));
+        } catch (Exception e) {
+            return getRepository().findAll();
+        }
     }
 
     public T findById(ID id) {

@@ -17,6 +17,11 @@ public class CodcontService extends BaseCrudService<Codcont, Long> {
     private CodcontRepository repository;
 
     @Override
+    public java.util.List<Codcont> findAll() {
+        return repository.findAll(org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.ASC, "id"));
+    }
+
+    @Override
     protected JpaRepository<Codcont, Long> getRepository() {
         return repository;
     }
