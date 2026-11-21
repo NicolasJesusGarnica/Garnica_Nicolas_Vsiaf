@@ -37,6 +37,6 @@ public class Codcont {
     private Boolean actualiza = true;
 
     @Column(name = "observaciones", length = 500)
-    @Schema(description = "Notas u observaciones del grupo contable", example = "Sin observaciones")
+    @Schema(description = "Notas u observaciones del grupo contable", nullable = true)
     private String observaciones;
 }
