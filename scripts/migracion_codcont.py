@@ -1,16 +1,4 @@
-"""
-=============================================================================
-SCRIPT DE MIGRACION DE DATOS: FOXPRO (DBF) -> POSTGRESQL (SQL)
-TABLA: CODCONT (Grupos Contables - D.S. 24051)
-PROYECTO: VSIAF - UATF
-=============================================================================
-Este script realiza el proceso ETL (Extraccion, Transformacion y Carga):
-1. Lee los archivos binarios originales 'codcont.dbf' y 'codcont.fpt' (FoxPro).
-2. Transforma y normaliza los tipos de datos a estandar SQL / PostgreSQL.
-3. Calcula coeficientes de depreciacion segun ley boliviana (100 / vida_util).
-4. Genera el script SQL ejecutable con DDL (CREATE TABLE) y DML (INSERT INTO).
-=============================================================================
-"""
+
 
 import struct
 import os

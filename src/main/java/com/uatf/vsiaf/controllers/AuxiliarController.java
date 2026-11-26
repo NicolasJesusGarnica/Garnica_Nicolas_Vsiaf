@@ -3,13 +3,16 @@ package com.uatf.vsiaf.controllers;
 import com.uatf.vsiaf.entities.Auxiliar;
 import com.uatf.vsiaf.services.AuxiliarService;
 import com.uatf.vsiaf.services.BaseCrudService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/auxiliares")
+@RequestMapping({"/api/auxiliares", "/api/auxiliar"})
 @Tag(name = "Auxiliar", description = "Auxiliares contables (VSIAF)")
 public class AuxiliarController extends BaseCrudController<Auxiliar, Long> {
 
@@ -19,5 +22,17 @@ public class AuxiliarController extends BaseCrudController<Auxiliar, Long> {
     @Override
     protected BaseCrudService<Auxiliar, Long> getService() {
         return service;
+    }
+
+    @GetMapping(params = "codcontId")
+    @Operation(summary = "Listar auxiliares por grupo contable", description = "Retorna los auxiliares asociados a un grupo contable específico.")
+    public ResponseEntity<List<Auxiliar>> listarPorCodcontParam(@RequestParam Long codcontId) {
+        return ResponseEntity.ok(service.findByCodcontId(codcontId));
+    }
+
+    @GetMapping("/por-codcont/{codcontId}")
+    @Operation(summary = "Listar auxiliares por grupo contable (ruta directa)", description = "Retorna los auxiliares asociados a un grupo contable específico.")
+    public ResponseEntity<List<Auxiliar>> listarPorCodcontPath(@PathVariable Long codcontId) {
+        return ResponseEntity.ok(service.findByCodcontId(codcontId));
     }
 }

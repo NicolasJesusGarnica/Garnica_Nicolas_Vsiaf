@@ -1,11 +1,3 @@
--- =============================================================================
--- SCRIPT DE BASE DE DATOS POSTGRESQL - TABLA: CODCONT (codigos_contables)
--- PROYECTO: VSIAF - Sistema de Informacion y Administracion Financiera
--- UNIVERSIDAD AUTONOMA TOMAS FRIAS (UATF)
--- NORMATIVA: Decreto Supremo 24051 - Reglamento del IUE (Bolivia)
--- =============================================================================
-
--- 1. CREACION DE LA TABLA (DDL)
 CREATE TABLE IF NOT EXISTS codigos_contables (
     id BIGINT PRIMARY KEY,
     cuenta_contable VARCHAR(20) UNIQUE NOT NULL,
@@ -17,10 +9,10 @@ CREATE TABLE IF NOT EXISTS codigos_contables (
     observaciones VARCHAR(500)
 );
 
--- 2. CREACION DE SECUENCIA PARA AUTOINCREMENTO
+
 CREATE SEQUENCE IF NOT EXISTS codigos_contables_id_seq START WITH 50 INCREMENT BY 1;
 
--- 3. INSERCION DE LOS 39 GRUPOS CONTABLES OFICIALES DE BOLIVIA (DML)
+
 INSERT INTO codigos_contables (id, cuenta_contable, descripcion, vida_util_anios, coeficiente_depreciacion, deprecia, actualiza, observaciones) VALUES
     (1, '12301', 'EDIFICACIONES', 40, 2.5, TRUE, TRUE, NULL),
     (2, '12302', 'MUEBLES Y ENSERES DE OFICINA', 10, 10.0, TRUE, TRUE, NULL),
@@ -57,7 +49,8 @@ INSERT INTO codigos_contables (id, cuenta_contable, descripcion, vida_util_anios
     (6, '12306', 'EQUIPO EDUCACIONAL Y RECREATIVO', 8, 12.5, TRUE, TRUE, NULL),
     (34, '12334', 'TERRENOS', 0, 0.0, FALSE, TRUE, NULL),
     (36, '12336', 'OTROS ACTIVOS FIJOS', 0, 0.0, FALSE, FALSE, NULL),
-    (37, '12337', 'ACTIVOS INTANGIBLES', 5, 20.0, TRUE, TRUE, 'Vida util cambiado de 4 anos a 5 anos en fecha 19/12/2000, por instrucciones de Ximena Rodriguez y Lic. Mario Costas. Existe una nota de respaldo del Colegio de Auditores y/o Contadores.'),
+    (37, '12337', 'ACTIVOS INTANGIBLES', 5, 20.0, TRUE, TRUE, 'Vida util cambiado de 4 anos a 5 anos en fecha 19/12/2000, por instrucciones de Ximena Rodriguez y Lic. Mario Costas.
+ Existe una nota de respaldo del Colegio de Auditores y/o Contadores.'),
     (38, '12338', 'EQUIPO E INSTALACIONES', 8, 12.5, TRUE, TRUE, NULL),
     (39, '12339', 'OTRAS PLANTACIONES', 8, 12.5, TRUE, TRUE, NULL),
     (40, '12340', 'ACTIVOS MUSEOLOGICOS Y CULTURALES', 0, 0.0, FALSE, FALSE, NULL);

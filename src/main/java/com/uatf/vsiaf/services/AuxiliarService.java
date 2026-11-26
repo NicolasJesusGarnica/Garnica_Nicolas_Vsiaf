@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class AuxiliarService extends BaseCrudService<Auxiliar, Long> {
 
@@ -44,11 +46,21 @@ public class AuxiliarService extends BaseCrudService<Auxiliar, Long> {
         entity.setId(id);
     }
 
+    public List<Auxiliar> findByCodcontId(Long codcontId) {
+        return repository.findByCodcontIdOrderByCodigoAsc(codcontId);
+    }
+
     @Override
     @Transactional
     public Auxiliar create(Auxiliar entity) {
         if (entity.getId() != null && repository.existsById(entity.getId())) {
             throw new DuplicateResourceException("El auxiliar con ID " + entity.getId() + " ya ha sido registrado. Por favor, registre con otro ID o no envíe el ID para asignación automática.");
+        }
+
+        if (entity.getCodcont() != null && entity.getCodcont().getId() != null && entity.getCodigo() != null) {
+            if (repository.existsByCodcontIdAndCodigo(entity.getCodcont().getId(), entity.getCodigo())) {
+                throw new DuplicateResourceException("El código de auxiliar '" + entity.getCodigo() + "' ya existe para este grupo contable.");
+            }
         }
 
         if (entity.getId() == null) {
