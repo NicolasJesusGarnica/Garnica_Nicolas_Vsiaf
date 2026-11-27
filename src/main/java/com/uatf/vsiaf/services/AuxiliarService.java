@@ -1,8 +1,11 @@
 package com.uatf.vsiaf.services;
 
 import com.uatf.vsiaf.entities.Auxiliar;
+import com.uatf.vsiaf.entities.Codcont;
 import com.uatf.vsiaf.exceptions.DuplicateResourceException;
+import com.uatf.vsiaf.exceptions.ResourceNotFoundException;
 import com.uatf.vsiaf.repositories.AuxiliarRepository;
+import com.uatf.vsiaf.repositories.CodcontRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,9 @@ public class AuxiliarService extends BaseCrudService<Auxiliar, Long> {
 
     @Autowired
     private AuxiliarRepository repository;
+
+    @Autowired
+    private CodcontRepository codcontRepository;
 
     @Override
     protected JpaRepository<Auxiliar, Long> getRepository() {
@@ -57,10 +63,13 @@ public class AuxiliarService extends BaseCrudService<Auxiliar, Long> {
             throw new DuplicateResourceException("El auxiliar con ID " + entity.getId() + " ya ha sido registrado. Por favor, registre con otro ID o no envíe el ID para asignación automática.");
         }
 
-        if (entity.getCodcont() != null && entity.getCodcont().getId() != null && entity.getCodigo() != null) {
-            if (repository.existsByCodcontIdAndCodigo(entity.getCodcont().getId(), entity.getCodigo())) {
+        if (entity.getCodcont() != null && entity.getCodcont().getId() != null) {
+            Codcont codcont = codcontRepository.findById(entity.getCodcont().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("El grupo contable con ID " + entity.getCodcont().getId() + " no existe."));
+            if (entity.getCodigo() != null && repository.existsByCodcontIdAndCodigo(codcont.getId(), entity.getCodigo())) {
                 throw new DuplicateResourceException("El código de auxiliar '" + entity.getCodigo() + "' ya existe para este grupo contable.");
             }
+            entity.setCodcont(codcont);
         }
 
         if (entity.getId() == null) {
@@ -73,5 +82,25 @@ public class AuxiliarService extends BaseCrudService<Auxiliar, Long> {
         entityManager.persist(entity);
         entityManager.flush();
         return entity;
+    }
+
+    @Override
+    @Transactional
+    public Auxiliar update(Long id, Auxiliar entity) {
+        Auxiliar existente = findById(id);
+        if (entity.getCodigo() != null) {
+            existente.setCodigo(entity.getCodigo());
+        }
+        if (entity.getNombre() != null) {
+            existente.setNombre(entity.getNombre());
+        }
+        if (entity.getCodcont() != null && entity.getCodcont().getId() != null) {
+            Codcont codcont = codcontRepository.findById(entity.getCodcont().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("El grupo contable con ID " + entity.getCodcont().getId() + " no existe."));
+            existente.setCodcont(codcont);
+        }
+        Auxiliar merged = entityManager.merge(existente);
+        entityManager.flush();
+        return merged;
     }
 }
