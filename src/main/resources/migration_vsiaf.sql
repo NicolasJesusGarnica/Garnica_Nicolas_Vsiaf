@@ -30,6 +30,15 @@ CREATE TABLE IF NOT EXISTS auxiliares (
 
 CREATE SEQUENCE IF NOT EXISTS auxiliares_id_seq START WITH 10 INCREMENT BY 1;
 
+-- Eliminar restricción única antigua de columna simple (Hibernate) si existiera
+ALTER TABLE auxiliares DROP CONSTRAINT IF EXISTS ukqnf4on2en762vlcgjy3go7sos;
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'uq_codcont_auxiliar') THEN
+        ALTER TABLE auxiliares ADD CONSTRAINT uq_codcont_auxiliar UNIQUE (codcont_id, codigo_auxiliar);
+    END IF;
+END $$;
+
 -- 3. POBLACION DEL CATALOGO NACIONAL OFICIAL D.S. 24051 (39 RUBROS)
 INSERT INTO codigos_contables (id, cuenta_contable, descripcion, vida_util_anios, coeficiente_depreciacion, deprecia, actualiza, observaciones) VALUES
     (1, '12301', 'EDIFICACIONES', 40, 2.5, TRUE, TRUE, NULL),
@@ -80,10 +89,14 @@ ON CONFLICT (id) DO UPDATE SET
     actualiza = EXCLUDED.actualiza,
     observaciones = EXCLUDED.observaciones;
 
--- 4. POBLACION DE AUXILIARES MIEGADOS DESDE VSIAF ORIGINAL
+-- 4. POBLACION DE AUXILIARES MIGRADOS DESDE VSIAF ORIGINAL
 INSERT INTO auxiliares (id, codigo_auxiliar, nombre, codcont_id) VALUES
     (1, '1', 'CASA DE 50 M', 1),
     (2, '2', 'OFICINA 40 M', 1),
     (3, '1', 'TELEFONO CELULAR J7', 5),
     (4, '1', 'TERRENO DE 70 M2', 34)
 ON CONFLICT DO NOTHING;
+
+-- Sincronizar secuencias para evitar conflictos de ID al insertar desde el backend
+SELECT setval('codigos_contables_id_seq', COALESCE((SELECT MAX(id) FROM codigos_contables), 0) + 1, false);
+SELECT setval('auxiliares_id_seq', COALESCE((SELECT MAX(id) FROM auxiliares), 0) + 1, false);
