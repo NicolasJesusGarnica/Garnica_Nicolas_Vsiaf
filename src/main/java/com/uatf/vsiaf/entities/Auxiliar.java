@@ -17,11 +17,11 @@ public class Auxiliar {
     @Schema(description = "Identificador único (opcional para autoincremental, o manual para validar duplicados)", example = "1")
     private Long id;
 
-    @Column(length = 4, nullable = false)
+    @Column(length = 4)
     @Schema(description = "Código de entidad pública (ENTIDAD en auxiliar.DBF)", example = "143")
     private String entidad = "143";
 
-    @Column(length = 5, nullable = false)
+    @Column(length = 5)
     @Schema(description = "Código de unidad administrativa (UNIDAD en auxiliar.DBF)", example = "UATF")
     private String unidad = "UATF";
 
