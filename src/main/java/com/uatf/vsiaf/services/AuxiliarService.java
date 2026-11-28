@@ -4,6 +4,7 @@ import com.uatf.vsiaf.entities.Auxiliar;
 import com.uatf.vsiaf.entities.Codcont;
 import com.uatf.vsiaf.exceptions.DuplicateResourceException;
 import com.uatf.vsiaf.exceptions.ResourceNotFoundException;
+import com.uatf.vsiaf.repositories.ActualRepository;
 import com.uatf.vsiaf.repositories.AuxiliarRepository;
 import com.uatf.vsiaf.repositories.CodcontRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class AuxiliarService extends BaseCrudService<Auxiliar, Long> {
 
     @Autowired
     private CodcontRepository codcontRepository;
+
+    @Autowired
+    private ActualRepository actualRepository;
 
     @Override
     protected JpaRepository<Auxiliar, Long> getRepository() {
@@ -55,6 +59,24 @@ public class AuxiliarService extends BaseCrudService<Auxiliar, Long> {
 
     public List<Auxiliar> findByCodcontId(Long codcontId) {
         return repository.findByCodcontIdOrderByCodigoAsc(codcontId);
+    }
+
+    public boolean hasDependencies(Long id) {
+        return actualRepository.existsByAuxiliarId(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("No se puede eliminar porque el auxiliar con ID " + id + " no existe.");
+        }
+        if (actualRepository.existsByAuxiliarId(id)) {
+            throw new DuplicateResourceException("No se puede Eliminar este Auxiliar por existir Dependencias");
+        }
+        Auxiliar entity = findById(id);
+        entityManager.remove(entity);
+        entityManager.flush();
     }
 
     @Override

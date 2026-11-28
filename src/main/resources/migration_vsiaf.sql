@@ -133,6 +133,28 @@ ON CONFLICT (id) DO UPDATE SET
     feult = EXCLUDED.feult,
     usuar = EXCLUDED.usuar;
 
+-- 5. ACTIVOS FIJOS REALES VINCULADOS A AUXILIARES (ACTUAL.DBF) PARA VALIDACION DE DEPENDENCIAS
+CREATE TABLE IF NOT EXISTS activos_actuales (
+    id BIGSERIAL PRIMARY KEY,
+    codigo_activo VARCHAR(50) UNIQUE,
+    codigo_adi VARCHAR(50),
+    descripcion VARCHAR(255),
+    fecha_incorporacion DATE,
+    costo_inicial DOUBLE PRECISION,
+    valor_neto DOUBLE PRECISION,
+    estado_bien VARCHAR(50),
+    codcont_id BIGINT REFERENCES codigos_contables(id),
+    auxiliar_id BIGINT REFERENCES auxiliares(id)
+);
+
+INSERT INTO activos_actuales (id, codigo_activo, codigo_adi, descripcion, fecha_incorporacion, costo_inicial, valor_neto, estado_bien, codcont_id, auxiliar_id) VALUES
+    (1, '001', 'PT-01', 'EDIFICIO DE 30 M2', '2007-12-11', 11000.00, 11000.00, 'BUENO', 1, 1),
+    (2, 'PT-002', 'PTS', 'NINGUNA', '2025-05-15', 1111.00, 1111.00, 'BUENO', 5, 3)
+ON CONFLICT (id) DO UPDATE SET
+    codcont_id = EXCLUDED.codcont_id,
+    auxiliar_id = EXCLUDED.auxiliar_id;
+
 -- Sincronizar secuencias para evitar conflictos de ID al insertar desde el backend
 SELECT setval('codigos_contables_id_seq', COALESCE((SELECT MAX(id) FROM codigos_contables), 0) + 1, false);
 SELECT setval('auxiliares_id_seq', COALESCE((SELECT MAX(id) FROM auxiliares), 0) + 1, false);
+SELECT setval(pg_get_serial_sequence('activos_actuales', 'id'), COALESCE((SELECT MAX(id) FROM activos_actuales), 0) + 1, false);

@@ -35,4 +35,10 @@ public class AuxiliarController extends BaseCrudController<Auxiliar, Long> {
     public ResponseEntity<List<Auxiliar>> listarPorCodcontPath(@PathVariable Long codcontId) {
         return ResponseEntity.ok(service.findByCodcontId(codcontId));
     }
+
+    @GetMapping("/{id}/dependencias")
+    @Operation(summary = "Verificar si el auxiliar tiene activos fijos asociados", description = "Retorna true si existen registros en activos_actuales vinculados al auxiliar.")
+    public ResponseEntity<java.util.Map<String, Boolean>> verificarDependencias(@PathVariable Long id) {
+        return ResponseEntity.ok(java.util.Map.of("tieneDependencias", service.hasDependencies(id)));
+    }
 }
