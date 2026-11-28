@@ -1,10 +1,35 @@
 -- =============================================================================
 -- SCRIPT OFICIAL DE MIGRACION DE BASE DE DATOS POSTGRESQL (D.S. 24051 - VSIAF)
 -- UNIVERSIDAD AUTONOMA TOMAS FRIAS (UATF) - CARRERA DE INGENIERIA DE SISTEMAS
--- MODULO: GRUPOS CONTABLES (CODCONT) Y AUXILIARES
+-- TABLAS MIGRADAS: CODCONT (codigos_contables) Y AUXILIAR (auxiliares)
 -- =============================================================================
 
--- 1. TABLA MAESTRA: GRUPOS CONTABLES (CODCONT)
+-- 0. ENTIDAD Y UNIDAD ADMINISTRATIVA OFICIAL DE LA BASE VSIAF (entidades.dbf / unidadadmin.DBF)
+CREATE TABLE IF NOT EXISTS entidades (
+    id BIGINT PRIMARY KEY,
+    codigo_entidad VARCHAR(10) UNIQUE,
+    descripcion VARCHAR(200),
+    sigla VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS unidad_admin (
+    id BIGINT PRIMARY KEY,
+    codigo_unidad VARCHAR(20) UNIQUE,
+    nombre VARCHAR(150),
+    ciudad VARCHAR(100),
+    entidad_id BIGINT REFERENCES entidades(id),
+    cla_depts_id BIGINT
+);
+
+INSERT INTO entidades (id, codigo_entidad, descripcion, sigla) VALUES
+    (1, '143', 'Universidad Autónoma Tomás Frías', 'UATF')
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO unidad_admin (id, codigo_unidad, nombre, ciudad, entidad_id) VALUES
+    (1, 'UATF', 'UNIVERSIDAD AUTONOMA TOMAS FRIAS', 'POTOSI', 1)
+ON CONFLICT (id) DO NOTHING;
+
+-- 1. TABLA MAESTRA: GRUPOS CONTABLES (CODCONT.DBF)
 CREATE TABLE IF NOT EXISTS codigos_contables (
     id BIGINT PRIMARY KEY,
     cuenta_contable VARCHAR(20) UNIQUE NOT NULL,
@@ -18,28 +43,34 @@ CREATE TABLE IF NOT EXISTS codigos_contables (
 
 CREATE SEQUENCE IF NOT EXISTS codigos_contables_id_seq START WITH 50 INCREMENT BY 1;
 
--- 2. TABLA DETALLE: AUXILIARES
+-- 2. TABLA DETALLE: AUXILIARES (auxiliar.DBF)
 CREATE TABLE IF NOT EXISTS auxiliares (
     id BIGSERIAL PRIMARY KEY,
+    entidad VARCHAR(4) NOT NULL DEFAULT '143',
+    unidad VARCHAR(5) NOT NULL DEFAULT 'UATF',
     codigo_auxiliar VARCHAR(20) NOT NULL,
     nombre VARCHAR(200) NOT NULL,
+    observaciones VARCHAR(500),
+    feult DATE DEFAULT CURRENT_DATE,
+    usuar VARCHAR(20) DEFAULT 'admin',
     codcont_id BIGINT REFERENCES codigos_contables(id) ON DELETE CASCADE,
     objgasto_id BIGINT,
-    CONSTRAINT uq_codcont_auxiliar UNIQUE (codcont_id, codigo_auxiliar)
+    CONSTRAINT uq_codcont_auxiliar UNIQUE (entidad, unidad, codcont_id, codigo_auxiliar)
 );
+
+-- Asegurar columnas y restricción compuesta si la tabla ya había sido creada por Hibernate
+ALTER TABLE auxiliares ADD COLUMN IF NOT EXISTS entidad VARCHAR(4) NOT NULL DEFAULT '143';
+ALTER TABLE auxiliares ADD COLUMN IF NOT EXISTS unidad VARCHAR(5) NOT NULL DEFAULT 'UATF';
+ALTER TABLE auxiliares ADD COLUMN IF NOT EXISTS observaciones VARCHAR(500);
+ALTER TABLE auxiliares ADD COLUMN IF NOT EXISTS feult DATE DEFAULT CURRENT_DATE;
+ALTER TABLE auxiliares ADD COLUMN IF NOT EXISTS usuar VARCHAR(20) DEFAULT 'admin';
+ALTER TABLE auxiliares DROP CONSTRAINT IF EXISTS ukqnf4on2en762vlcgjy3go7sos;
+ALTER TABLE auxiliares DROP CONSTRAINT IF EXISTS uq_codcont_auxiliar;
+ALTER TABLE auxiliares ADD CONSTRAINT uq_codcont_auxiliar UNIQUE (entidad, unidad, codcont_id, codigo_auxiliar);
 
 CREATE SEQUENCE IF NOT EXISTS auxiliares_id_seq START WITH 10 INCREMENT BY 1;
 
--- Eliminar restricción única antigua de columna simple (Hibernate) si existiera
-ALTER TABLE auxiliares DROP CONSTRAINT IF EXISTS ukqnf4on2en762vlcgjy3go7sos;
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'uq_codcont_auxiliar') THEN
-        ALTER TABLE auxiliares ADD CONSTRAINT uq_codcont_auxiliar UNIQUE (codcont_id, codigo_auxiliar);
-    END IF;
-END $$;
-
--- 3. POBLACION DEL CATALOGO NACIONAL OFICIAL D.S. 24051 (39 RUBROS)
+-- 3. POBLACION DEL CATALOGO NACIONAL OFICIAL D.S. 24051 (39 RUBROS - CODCONT.DBF)
 INSERT INTO codigos_contables (id, cuenta_contable, descripcion, vida_util_anios, coeficiente_depreciacion, deprecia, actualiza, observaciones) VALUES
     (1, '12301', 'EDIFICACIONES', 40, 2.5, TRUE, TRUE, NULL),
     (2, '12302', 'MUEBLES Y ENSERES DE OFICINA', 10, 10.0, TRUE, TRUE, NULL),
@@ -89,13 +120,18 @@ ON CONFLICT (id) DO UPDATE SET
     actualiza = EXCLUDED.actualiza,
     observaciones = EXCLUDED.observaciones;
 
--- 4. POBLACION DE AUXILIARES MIGRADOS DESDE VSIAF ORIGINAL
-INSERT INTO auxiliares (id, codigo_auxiliar, nombre, codcont_id) VALUES
-    (1, '1', 'CASA DE 50 M', 1),
-    (2, '2', 'OFICINA 40 M', 1),
-    (3, '1', 'TELEFONO CELULAR J7', 5),
-    (4, '1', 'TERRENO DE 70 M2', 34)
-ON CONFLICT DO NOTHING;
+-- 4. POBLACION DE AUXILIARES MIGRADOS DESDE VSIAF ORIGINAL (auxiliar.DBF)
+INSERT INTO auxiliares (id, entidad, unidad, codigo_auxiliar, nombre, observaciones, feult, usuar, codcont_id) VALUES
+    (1, '143', 'UATF', '1', 'CASA DE 50 M', NULL, '2026-11-21', 'admin', 1),
+    (2, '143', 'UATF', '2', 'OFICINA 40 M', NULL, '2026-11-21', 'admin', 1),
+    (3, '143', 'UATF', '1', 'TELEFONO CELULAR J7', NULL, '2026-11-21', 'admin', 5),
+    (4, '143', 'UATF', '1', 'TERRENO DE 70 M2', NULL, '2026-11-21', 'admin', 34)
+ON CONFLICT (id) DO UPDATE SET
+    entidad = EXCLUDED.entidad,
+    unidad = EXCLUDED.unidad,
+    observaciones = EXCLUDED.observaciones,
+    feult = EXCLUDED.feult,
+    usuar = EXCLUDED.usuar;
 
 -- Sincronizar secuencias para evitar conflictos de ID al insertar desde el backend
 SELECT setval('codigos_contables_id_seq', COALESCE((SELECT MAX(id) FROM codigos_contables), 0) + 1, false);

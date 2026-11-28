@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -72,6 +73,19 @@ public class AuxiliarService extends BaseCrudService<Auxiliar, Long> {
             entity.setCodcont(codcont);
         }
 
+        if (entity.getEntidad() == null || entity.getEntidad().isBlank()) {
+            entity.setEntidad("143");
+        }
+        if (entity.getUnidad() == null || entity.getUnidad().isBlank()) {
+            entity.setUnidad("UATF");
+        }
+        if (entity.getFeult() == null) {
+            entity.setFeult(LocalDate.now());
+        }
+        if (entity.getUsuar() == null || entity.getUsuar().isBlank()) {
+            entity.setUsuar("admin");
+        }
+
         if (entity.getId() == null) {
             Long nextId = getNextSequenceValue();
             entity.setId(nextId);
@@ -88,12 +102,25 @@ public class AuxiliarService extends BaseCrudService<Auxiliar, Long> {
     @Transactional
     public Auxiliar update(Long id, Auxiliar entity) {
         Auxiliar existente = findById(id);
+        if (entity.getEntidad() != null && !entity.getEntidad().isBlank()) {
+            existente.setEntidad(entity.getEntidad());
+        }
+        if (entity.getUnidad() != null && !entity.getUnidad().isBlank()) {
+            existente.setUnidad(entity.getUnidad());
+        }
         if (entity.getCodigo() != null) {
             existente.setCodigo(entity.getCodigo());
         }
         if (entity.getNombre() != null) {
             existente.setNombre(entity.getNombre());
         }
+        if (entity.getObservaciones() != null) {
+            existente.setObservaciones(entity.getObservaciones());
+        }
+        if (entity.getUsuar() != null && !entity.getUsuar().isBlank()) {
+            existente.setUsuar(entity.getUsuar());
+        }
+        existente.setFeult(entity.getFeult() != null ? entity.getFeult() : LocalDate.now());
         if (entity.getCodcont() != null && entity.getCodcont().getId() != null) {
             Codcont codcont = codcontRepository.findById(entity.getCodcont().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("El grupo contable con ID " + entity.getCodcont().getId() + " no existe."));
